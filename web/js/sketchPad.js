@@ -1,6 +1,6 @@
 class SketchPad {
 
-    constructor(container, size = 400) { // Al iniciar el objeto, pasandole un contenedos div y un tamaño
+    constructor(container, onUpdate = null, size = 400) { // Al iniciar el objeto, pasandole un contenedos div y un tamaño
         this.canvas = document.createElement("canvas"); // Creamos el elemento canvas
         this.canvas.width = size;//Les damos un tamaño 
         this.canvas.height = size;
@@ -14,7 +14,10 @@ class SketchPad {
         this.undoBtn = document.createElement("button");//lo mismo...
         this.undoBtn.innerHTML = "UNDO"
         container.appendChild(this.undoBtn)
-        this.ctx = this.canvas.getContext("2d");//NOs traemos el contexto de trabajo
+        this.ctx = this.canvas.getContext("2d");
+        //NOs traemos el contexto de trabajo
+
+        this.onUpdate = onUpdate;
         this.reset()
         this.#addEventListeners();//Iniciamos 
 
@@ -81,6 +84,14 @@ class SketchPad {
         } else {
             this.undoBtn.disabled = true
 
+        }
+
+        this.triggerUpdate();
+    }
+
+    triggerUpdate() {
+        if (this.onUpdate) {
+            this.onUpdate(this.paths)
         }
     }
 
